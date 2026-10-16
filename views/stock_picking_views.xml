@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- ================================================================= -->
+    <!-- EXTENSIÓN: Vista de Formulario de Albaranes (Stock Picking)       -->
+    <!-- ================================================================= -->
+
+    <record id="view_picking_form_inherit_supply_chain_aio" model="ir.ui.view">
+        <field name="name">stock.picking.view.form.inherit.supply.chain.aio</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <!-- 1. Columna de secuencia antes del producto en las operaciones -->
+            <xpath expr="//field[@name='move_ids']//list//field[@name='product_id']"
+                   position="before">
+                <field name="sequence_number"/>
+            </xpath>
+
+            <!-- 2. Botones de Cancelar/Eliminar y Restablecer a Borrador en la cabecera -->
+            <xpath expr="//header" position="inside">
+                <button name="action_cancel_delete_picking" 
+                        string="Cancelar/Eliminar Transferencia" 
+                        type="object" 
+                        groups="supply_chain_aio.group_stock_picking_cancel" 
+                        invisible="state not in ['done', 'assigned']"/>
+                <button name="action_draft" 
+                        string="Establecer como Borrador" 
+                        type="object" 
+                        groups="supply_chain_aio.group_stock_picking_cancel"
+                        invisible="state != 'cancel'"/>
+            </xpath>
+
+            <!-- 3. Restricción de lotes/series disponibles en la pestaña de Operaciones -->
+            <xpath expr="//field[@name='move_ids']//list//field[@name='lot_ids']" position="before">
+                <field name="available_lot_ids" column_invisible="True"/>
+                <field name="is_internal_origin" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='move_ids']//list//field[@name='lot_ids']" position="attributes">
+                <attribute name="domain">[('id', 'in', available_lot_ids)]</attribute>
+            </xpath>
+
+            <!-- 4. Campo de notas en las líneas de operaciones -->
+            <xpath expr="//field[@name='move_ids']//list//field[@name='product_id']" position="after">
+                <field name="note" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ================================================================= -->
+    <!-- EXTENSIÓN: Operaciones Detalladas (Stock Move Line)               -->
+    <!-- ================================================================= -->
+
+    <record id="view_stock_move_line_detailed_operation_tree_inherit_lots_aio" model="ir.ui.view">
+        <field name="name">stock.move.line.operations.tree.inherit.lots.aio</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+        <field name="arch" type="xml">
+            <!-- Campos auxiliares invisibles -->
+            <xpath expr="//field[@name='lot_id']" position="before">
+                <field name="available_lot_ids" column_invisible="True"/>
+                <field name="is_internal_origin" column_invisible="True"/>
+            </xpath>
+
+            <!-- Restringir dominio del selector de número de serie/lote en salidas, traslados y recepciones -->
+            <xpath expr="//field[@name='lot_id']" position="attributes">
+                <attribute name="domain">[('id', 'in', available_lot_ids)]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ================================================================= -->
+    <!-- EXTENSIÓN: Tipos de Operación de Stock (Stock Picking Type)       -->
+    <!-- ================================================================= -->
+    <record id="view_picking_type_form_inherit_supply_chain_aio" model="ir.ui.view">
+        <field name="name">stock.picking.type.form.inherit.supply.chain.aio</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='locations']" position="inside">
+                <field name="default_dest_picking_type"
+                       options="{'no_create': True, 'no_open': True}"
+                       invisible="code != 'internal'"
+                       domain="[('code', '=', 'incoming')]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

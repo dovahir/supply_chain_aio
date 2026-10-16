@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ================================================================= -->
+    <!-- VISTA FORMULARIO: Asistente Cancelar/Eliminar Transferencia       -->
+    <!-- ================================================================= -->
+    <record id="view_stock_picking_cancel_wizard_form" model="ir.ui.view">
+        <field name="name">stock.picking.cancel.wizard.form</field>
+        <field name="model">stock.picking.cancel.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cancelar/Eliminar Transferencia">
+                <group>
+                    <field name="action" widget="radio"/>
+                    <field name="delete_lots"/>
+                    <field name="process_by_quantities"/>
+                    <field name="batch_size" invisible="not process_by_quantities"/>
+                </group>
+                <group invisible="not has_allocations" string="Requisiciones y Asignaciones Vinculadas">
+                    <field name="has_allocations" invisible="1"/>
+                    <field name="cancel_action" widget="radio"/>
+                    <field name="cancel_reason" placeholder="Describa el motivo de la cancelación para el chatter de la requisición..."/>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Confirmar" type="object" class="btn-primary"/>
+                    <button string="Descartar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción de ventana vinculada al modelo stock.picking -->
+    <record id="action_stock_picking_cancel_wizard" model="ir.actions.act_window">
+        <field name="name">Cancelar/Eliminar Transferencia</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.picking.cancel.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_view_types">form</field>
+    </record>
+</odoo>

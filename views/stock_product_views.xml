@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- ================================================================= -->
+    <!-- EXTENSIÓN: Vista de Reporte de Stock / Productos (Stock Tree)     -->
+    <!-- ================================================================= -->
+
+    <record id="product_product_stock_tree_inherit_supply_chain_aio" model="ir.ui.view">
+        <field name="name">product.product.stock.list.inherit.supply.chain.aio</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="stock.product_product_stock_tree"/>
+        <field name="priority" eval="110"/>
+        <field name="arch" type="xml">
+            <!-- 1. Ocultar por defecto columna de Costo Unitario -->
+            <xpath expr="//field[@name='avg_cost']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+
+            <!-- 2. Ocultar por defecto columna de Valor Total -->
+            <xpath expr="//field[@name='total_value']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            
+            <!-- 3. Ocultar botón de Reabastecimiento -->
+            <xpath expr="//button[hasclass('btn-link') and @name='action_view_orderpoints']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+
+            <!-- 4. Ocultar botón de Pronóstico -->
+            <xpath expr="//button[hasclass('btn-link') and @name='action_product_forecast_report']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+
+            <!-- 5. Activar por defecto filtro de cantidades > 0 al abrir Ubicaciones -->
+            <xpath expr="//button[hasclass('btn-link') and @name='%(stock.action_view_quants)d']" position="attributes">
+                <attribute name="context">{'search_default_product_id': id, 'default_product_id': id, 'search_default_positive_qty': 1}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ================================================================= -->
+    <!-- EXTENSIÓN: Filtro de cantidades mayores a 0 en Búsqueda de Quants -->
+    <!-- ================================================================= -->
+
+    <record id="quant_search_view_inherit_supply_chain_aio" model="ir.ui.view">
+        <field name="name">stock.quant.search.inherit.supply.chain.aio</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.quant_search_view"/>
+        <field name="priority" eval="110"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='negative']" position="after">
+                <filter name="positive_qty" string="Con existencias (Mayor a 0)" domain="[('quantity', '&gt;', 0)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ================================================================= -->
+    <!-- EXTENSIÓN: Ocultar columna Reabastecer en Líneas de Quants        -->
+    <!-- ================================================================= -->
+
+    <record id="view_stock_quant_tree_editable_inherit_supply_chain_aio" model="ir.ui.view">
+        <field name="name">stock.quant.list.editable.inherit.supply.chain.aio</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_tree_editable"/>
+        <field name="priority" eval="110"/>
+        <field name="arch" type="xml">
+            <!-- Ocultar columna de botón de Reabastecimiento usando column_invisible -->
+            <xpath expr="//button[hasclass('btn-link') and @name='action_view_orderpoints']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ================================================================= -->
+    <!-- ACCIÓN: Filtro predeterminado de productos con existencias        -->
+    <!-- ================================================================= -->
+
+    <record id="stock.action_product_stock_view" model="ir.actions.act_window">
+        <field name="context">{'default_is_storable': True, 'search_default_real_stock_available': 1}</field>
+    </record>
+
+    <!-- ================================================================= -->
+    <!-- ACCIÓN: Filtro predeterminado de cantidades > 0 en Quants         -->
+    <!-- ================================================================= -->
+
+    <record id="stock.stock_quant_action" model="ir.actions.act_window">
+        <field name="context">{
+            'search_default_internal_loc': 1,
+            'inventory_mode': True,
+            'search_default_positive_qty': 1,
+        }</field>
+    </record>
+</odoo>
+

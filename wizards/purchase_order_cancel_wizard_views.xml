@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_order_cancel_wizard_form" model="ir.ui.view">
+        <field name="name">purchase.order.cancel.wizard.form</field>
+        <field name="model">purchase.order.cancel.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cancelar Pedido de Compra">
+                <p class="text-muted">
+                    Este pedido de compra contiene líneas asignadas a requisiciones de empleados/obras.
+                    Por favor, elija cómo debe manejarse el saldo pendiente en dichas requisiciones.
+                </p>
+                <group>
+                    <field name="purchase_order_id" readonly="1" options="{'no_open': True}"/>
+                    <field name="cancel_action" widget="radio"/>
+                    <field name="cancel_reason"/>
+                </group>
+                <footer>
+                    <button name="action_confirm_cancel" string="Confirmar Cancelación" type="object" class="btn-primary"/>
+                    <button string="Descartar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
