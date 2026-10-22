@@ -11,7 +11,3 @@ from . import stock_picking
 from . import res_config
 from . import stock_location
 from . import stock_quant
-
-# Trazabilidad transversal de suministro (Allocation)
-from . import supply_chain_allocation
-from . import stock_move

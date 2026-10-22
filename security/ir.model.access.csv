@@ -1,7 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_stock_picking_cancel_wizard,stock.picking.cancel.wizard,model_stock_picking_cancel_wizard,supply_chain_aio.group_stock_picking_cancel,1,1,1,1
 access_purchase_order_cancel_wizard,purchase.order.cancel.wizard,model_purchase_order_cancel_wizard,purchase.group_purchase_user,1,1,1,1
-access_supply_chain_allocation_user,supply.chain.allocation.user,model_supply_chain_allocation,base.group_user,1,0,0,0
-access_supply_chain_allocation_stock_user,supply.chain.allocation.stock.user,model_supply_chain_allocation,stock.group_stock_user,1,1,1,0
-access_supply_chain_allocation_purchase_user,supply.chain.allocation.purchase.user,model_supply_chain_allocation,purchase.group_purchase_user,1,1,1,0
-access_supply_chain_allocation_system,supply.chain.allocation.system,model_supply_chain_allocation,base.group_system,1,1,1,1

@@ -17,11 +17,5 @@
         <field name="comment">Autoriza a los usuarios cancelar o eliminar movimientos de inventario en estado Hecho y devolverlas a borrador.</field>
     </record>
 
-    <!-- Regla Multi-Compañía para Asignaciones de Suministro -->
-    <record id="supply_chain_allocation_comp_rule" model="ir.rule">
-        <field name="name">Asignación de Suministro Multi-Compañía</field>
-        <field name="model_id" ref="model_supply_chain_allocation"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
-    </record>
 </odoo>
 
